@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Studio | Tu Momento de Magia</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Outfit:wght@100;300;400;600&display=swap');
+
+        :root { --gold: #d4af37; --soft-pink: rgba(255, 192, 203, 0.1); --bg: #0a0a0a; }
+        
+        body { 
+            background-color: var(--bg); 
+            color: #fcfcfc; 
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+
+        h1, h2, .font-serif { font-family: 'Cormorant Garamond', serif; }
+
+        /* Cursor Dual Premium */
+        #custom-cursor { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; }
+        #cursor-follower { width: 35px; height: 35px; border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transition: transform 0.15s ease-out; }
+
+        /* Elementos 3D */
+        .floating-3d { position: fixed; pointer-events: none; z-index: 40; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)); will-change: transform; }
+        .petal { position: fixed; width: 15px; height: 15px; background: #ffd1dc; border-radius: 100% 0% 100% 0%; opacity: 0.3; filter: blur(1px); z-index: 35; }
+
+        .hero-bg {
+            background: linear-gradient(rgba(10,10,10,0.6), rgba(10,10,10,0.9)), 
+                        url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=1200');
+            background-size: cover; background-position: center;
+        }
+
+        .glass-card-premium {
+            background: rgba(255, 255, 255, 0.01);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 30px;
+        }
+
+        /* --- NUEVO: Catálogo Dinámico Adaptable --- */
+        .catalog-container {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding: 1rem;
+            scrollbar-width: none;
+        }
+        .catalog-container::-webkit-scrollbar { display: none; }
+
+        .style-card {
+            flex: 0 0 75%; /* Móvil: se ve una y parte de otra */
+            scroll-snap-align: center;
+            border-radius: 24px;
+            overflow: hidden;
+            aspect-ratio: 4/5;
+            position: relative;
+        }
+
+        @media (min-width: 1024px) {
+            .catalog-container {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                overflow: visible;
+            }
+            .style-card { flex: none; aspect-ratio: 3/4; transition: transform 0.5s ease; }
+            .style-card:hover { transform: translateY(-10px); }
+        }
+
+        /* Cinta Delgada */
+        .marquee-item { flex-shrink: 0; padding: 0 1.5rem; border-right: 1px solid rgba(212, 175, 55, 0.1); }
+        
+        .flatpickr-calendar { background: #111 !important; border: 1px solid var(--gold) !important; box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important; }
+    </style>
+</head>
+<body>
+
+    <div id="custom-cursor"></div>
+    <div id="cursor-follower"></div>
+
+    <img src="https://www.pngmart.com/files/7/Nail-Polish-PNG-Transparent-Image.png" id="bottle-3d" class="floating-3d w-32 md:w-56" style="top: 15%; right: -5%; transform: rotate(-20deg);">
+    <img src="https://www.pngmart.com/files/21/Makeup-Brush-PNG-File.png" id="brush-3d" class="floating-3d w-40 md:w-72" style="bottom: 10%; left: -10%; transform: rotate(45deg); opacity: 0.6;">
+
+    <header class="hero-bg min-h-screen flex flex-col justify-center items-center text-center px-6 relative">
+        <div class="max-w-4xl z-10">
+            <span class="hero-item text-gold uppercase tracking-[0.6em] text-[10px] mb-6 block opacity-0">El arte de resaltar tu esencia</span>
+            <h1 class="hero-item text-7xl md:text-9xl font-light mb-6 opacity-0">Belleza <span class="italic font-normal">Real.</span></h1>
+            <p class="hero-item text-xl text-gray-300 mb-12 max-w-lg mx-auto font-light leading-relaxed opacity-0">Uñas, manos y pies diseñados para la mujer moderna.</p>
+            <a href="#servicios" class="hero-item magnetic bg-[#d4af37] text-black font-semibold py-5 px-16 rounded-full shadow-2xl hover:scale-105 transition-all inline-block opacity-0">Reservar mi experiencia</a>
+        </div>
+    </header>
+
+    <section class="py-4 overflow-hidden bg-white/5 border-y border-gold/10 relative z-10">
+        <div id="marquee-container" class="flex whitespace-nowrap">
+            <div class="marquee-item flex items-center gap-4">
+                <span class="text-gold text-xl italic">✨</span>
+                <span class="text-[10px] uppercase tracking-widest text-gray-300">Detalle Infinito</span>
+            </div>
+            <div class="marquee-item flex items-center gap-4">
+                <span class="text-gold text-xl italic">🌸</span>
+                <span class="text-[10px] uppercase tracking-widest text-gray-300">Ambiente Relajante</span>
+            </div>
+            <div class="marquee-item flex items-center gap-4">
+                <span class="text-gold text-xl italic">🕒</span>
+                <span class="text-[10px] uppercase tracking-widest text-gray-300">Tu Tiempo Vale</span>
+            </div>
+            <div class="marquee-item flex items-center gap-4">
+                <span class="text-gold text-xl italic">✨</span>
+                <span class="text-[10px] uppercase tracking-widest text-gray-300">Detalle Infinito</span>
+            </div>
+            <div class="marquee-item flex items-center gap-4">
+                <span class="text-gold text-xl italic">🌸</span>
+                <span class="text-[10px] uppercase tracking-widest text-gray-300">Ambiente Relajante</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-serif italic mb-12 text-gold">Catálogo de Estilos</h2>
+            <div class="catalog-container">
+                <div class="style-card group">
+                    <img src="https://images.unsplash.com/photo-1620331311520-246422fd82f9?auto=format&fit=crop&q=80&w=500" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent p-6 flex flex-col justify-end">
+                        <h4 class="text-xl font-serif italic">Soft Layering</h4>
+                        <p class="text-[9px] text-gold uppercase tracking-[0.2em]">Corte Tendencia</p>
+                    </div>
+                </div>
+                <div class="style-card group">
+                    <img src="https://images.unsplash.com/photo-1595476108010-b4d1f8c2b1b1?auto=format&fit=crop&q=80&w=500" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent p-6 flex flex-col justify-end">
+                        <h4 class="text-xl font-serif italic">French Bob</h4>
+                        <p class="text-[9px] text-gold uppercase tracking-[0.2em]">Elegancia</p>
+                    </div>
+                </div>
+                <div class="style-card group">
+                    <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&q=80&w=500" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent p-6 flex flex-col justify-end">
+                        <h4 class="text-xl font-serif italic">Shaggy Chic</h4>
+                        <p class="text-[9px] text-gold uppercase tracking-[0.2em]">Versátil</p>
+                    </div>
+                </div>
+                <div class="style-card group">
+                    <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&q=80&w=500" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent p-6 flex flex-col justify-end">
+                        <h4 class="text-xl font-serif italic">Balayage</h4>
+                        <p class="text-[9px] text-gold uppercase tracking-[0.2em]">Luz Natural</p>
+                    </div>
+                </div>
+            </div>
+            <p class="text-center text-gray-500 text-[9px] mt-6 uppercase tracking-widest md:hidden">← Desliza para ver más →</p>
+        </div>
+    </section>
+
+    <section id="servicios" class="py-32 px-6 max-w-4xl mx-auto relative z-10">
+        <div class="glass-card-premium p-10 md:p-20 relative overflow-hidden">
+            <h2 class="text-5xl font-serif italic mb-4">Agenda tu Momento</h2>
+            <p class="text-gray-400 mb-12 font-light tracking-wide uppercase text-xs">Sincroniza el turno directamente con tu calendario</p>
+
+            <div class="space-y-10">
+                <div class="group relative">
+                    <label class="block mb-4 text-xs font-bold uppercase text-gold tracking-widest">1. ¿Qué servicio buscás?</label>
+                    <select id="main-service" onchange="updateFromSelect()" class="w-full bg-transparent border-b border-white/10 py-4 text-2xl font-serif outline-none focus:border-gold transition-colors appearance-none">
+                        <option value="0" class="bg-black">Seleccionar servicio...</option>
+                        <option value="2500" class="bg-black" data-name="Manicura Diseño">Manicura con Diseño — $2.500</option>
+                        <option value="2200" class="bg-black" data-name="Pedicura Spa">Spa de Pies — $2.200</option>
+                        <option value="1800" class="bg-black" data-name="Esmaltado">Semipermanente Liso — $1.800</option>
+                    </select>
+                </div>
+
+                <div class="group relative">
+                    <label class="block mb-4 text-xs font-bold uppercase text-gold tracking-widest">2. Seleccioná Día y Hora</label>
+                    <input type="text" id="date-picker" placeholder="Toca para elegir fecha..." class="w-full bg-transparent border-b border-white/10 py-4 text-xl outline-none focus:border-gold transition-colors">
+                </div>
+
+                <div class="flex items-center justify-between py-8 border-y border-white/5">
+                    <span class="text-gray-400 text-sm italic">Precio Final</span>
+                    <div class="text-5xl font-light text-gold">$<span id="total-display">0</span></div>
+                </div>
+
+                <div class="pt-8">
+                    <input type="text" id="client-name" placeholder="Tu Nombre Completo" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl mb-4 outline-none focus:border-gold transition-all text-lg">
+                    <input type="email" id="client-email" placeholder="Tu Email" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl mb-8 outline-none focus:border-gold transition-all text-lg">
+                    
+                    <button onclick="confirmarYAgendar()" class="magnetic w-full bg-gold text-black font-bold py-6 rounded-2xl text-xl hover:scale-[1.01] transition-all">
+                        Confirmar y Agendar Turno
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-20 text-center opacity-30 text-xs tracking-widest uppercase">
+        &copy; 2026 Beauty Studio Profesional | Villa Carlos Paz
+    </footer>
+
+    <script>
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Animaciones Marquee
+        gsap.to(".marquee-item", { xPercent: -100, repeat: -1, duration: 15, ease: "none" });
+
+        // Animación Cursor e Items Hero
+        const cursor = document.getElementById('custom-cursor');
+        const follower = document.getElementById('cursor-follower');
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0 });
+            gsap.to(follower, { x: e.clientX - 13, y: e.clientY - 13, duration: 0.2 });
+        });
+        gsap.to(".hero-item", { opacity: 1, y: -20, stagger: 0.2, duration: 1.5, ease: "expo.out", delay: 0.5 });
+
+        // LÓGICA DE CITAS (TU CÓDIGO)
+        flatpickr("#date-picker", {
+            enableTime: true,
+            dateFormat: "d/m/Y - H:i",
+            minDate: "today",
+            locale: "es",
+            minTime: "09:00",
+            maxTime: "20:00"
+        });
+
+        let currentPrice = 0, currentName = "";
+        function updateFromSelect() {
+            const select = document.getElementById('main-service');
+            currentPrice = parseInt(select.value);
+            currentName = select.options[select.selectedIndex].getAttribute('data-name');
+            document.getElementById('total-display').innerText = currentPrice.toLocaleString();
+        }
+
+        function confirmarYAgendar() {
+            const name = document.getElementById('client-name').value;
+            const date = document.getElementById('date-picker').value;
+            if(!name || !date || currentPrice === 0) return alert("Completa los datos.");
+            const msg = `¡Hola! Soy ${name}. Agendé un turno para *${currentName}* el día ${date}. Total: $${currentPrice}.`;
+            window.open(`https://wa.me/XXXXXXXXXXX?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // Efecto Magnético
+        document.querySelectorAll('.magnetic').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                gsap.to(btn, { x: (e.clientX - rect.left - rect.width/2) * 0.2, y: (e.clientY - rect.top - rect.height/2) * 0.2, duration: 0.4 });
+            });
+            btn.addEventListener('mouseleave', () => gsap.to(btn, { x: 0, y: 0, duration: 0.4 }));
+        });
+    </script>
+</body>
+</html>
