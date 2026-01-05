@@ -1,210 +1,233 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es-CO" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beauty Studio | Tu Momento de Magia</title>
+    <title>Afro Rose | Presentación de Proyecto Luxury Studio</title>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Outfit:wght@100;300;400;600&display=swap');
-
-        :root { --gold: #d4af37; --soft-pink: rgba(255, 192, 203, 0.1); --bg: #0a0a0a; }
-        
-        body { 
-            background-color: var(--bg); 
-            color: #fcfcfc; 
-            font-family: 'Outfit', sans-serif;
-            overflow-x: hidden;
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { gold: '#c5a059', 'luxury-dark': '#1a1a1a' }
+                }
+            }
         }
+    </script>
 
-        h1, h2, .font-serif { font-family: 'Cormorant Garamond', serif; }
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600&family=Outfit:wght@100;300;400;600&display=swap');
+        :root { --gold: #c5a059; }
+        body { background: #ffffff; color: #1a1a1a; font-family: 'Outfit', sans-serif; overflow-x: hidden; }
+        h1, h2, h3, .font-serif { font-family: 'Cormorant Garamond', serif; }
 
-        /* Cursor Dual Premium */
-        #custom-cursor { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; }
-        #cursor-follower { width: 35px; height: 35px; border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transition: transform 0.15s ease-out; }
+        .glass-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(15px); }
+        .tab-active { background: var(--gold); color: white; border-color: var(--gold); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Elementos 3D */
-        .floating-3d { position: fixed; pointer-events: none; z-index: 40; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)); will-change: transform; }
-        .petal { position: fixed; width: 15px; height: 15px; background: #ffd1dc; border-radius: 100% 0% 100% 0%; opacity: 0.3; filter: blur(1px); z-index: 35; }
-
+        #service-preview-container { 
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
+            max-height: 0; opacity: 0; overflow: hidden;
+        }
+        #service-preview-container.active { max-height: 400px; opacity: 1; margin-bottom: 2rem; }
+        
         .hero-bg {
-            background: linear-gradient(rgba(10,10,10,0.6), rgba(10,10,10,0.9)), 
-                        url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=1200');
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1605497746444-ac961aa01712?q=80&w=1200');
             background-size: cover; background-position: center;
         }
-
-        .glass-card-premium {
-            background: rgba(255, 255, 255, 0.01);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: 30px;
-        }
-
-        /* --- NUEVO: Catálogo Dinámico Adaptable --- */
-        .catalog-container {
-            display: flex;
-            gap: 1.5rem;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding: 1rem;
-            scrollbar-width: none;
-        }
-        .catalog-container::-webkit-scrollbar { display: none; }
-
-        .style-card {
-            flex: 0 0 75%; /* Móvil: se ve una y parte de otra */
-            scroll-snap-align: center;
-            border-radius: 24px;
-            overflow: hidden;
-            aspect-ratio: 4/5;
-            position: relative;
-        }
-
-        @media (min-width: 1024px) {
-            .catalog-container {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                overflow: visible;
-            }
-            .style-card { flex: none; aspect-ratio: 3/4; transition: transform 0.5s ease; }
-            .style-card:hover { transform: translateY(-10px); }
-        }
-
-        /* Cinta Delgada */
-        .marquee-item { flex-shrink: 0; padding: 0 1.5rem; border-right: 1px solid rgba(212, 175, 55, 0.1); }
-        
-        .flatpickr-calendar { background: #111 !important; border: 1px solid var(--gold) !important; box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important; }
     </style>
 </head>
 <body>
 
-    <div id="custom-cursor"></div>
-    <div id="cursor-follower"></div>
+    <a href="#" class="fixed bottom-6 right-6 z-[100] bg-white text-[#25d366] p-4 rounded-full shadow-2xl border border-gold/20 active:scale-90 transition-transform">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.888 11.888-11.888 3.176 0 6.161 1.237 8.404 3.48s3.481 5.229 3.481 8.406c0 6.556-5.333 11.888-11.889 11.888-2.018 0-3.997-.51-5.759-1.479l-6.124 1.702zm6.732-2.781l.398.236c1.474.873 3.165 1.334 4.89 1.334 5.395 0 9.782-4.387 9.782-9.782 0-2.612-1.017-5.067-2.862-6.913-1.846-1.847-4.3-2.864-6.913-2.864-5.396 0-9.783 4.387-9.783 9.783 0 2.031.527 4.021 1.53 5.769l.261.451-1.013 3.697 3.792-1.053z"/></svg>
+    </a>
 
-    <img src="https://www.pngmart.com/files/7/Nail-Polish-PNG-Transparent-Image.png" id="bottle-3d" class="floating-3d w-32 md:w-56" style="top: 15%; right: -5%; transform: rotate(-20deg);">
-    <img src="https://www.pngmart.com/files/21/Makeup-Brush-PNG-File.png" id="brush-3d" class="floating-3d w-40 md:w-72" style="bottom: 10%; left: -10%; transform: rotate(45deg); opacity: 0.6;">
-
-    <header class="hero-bg min-h-screen flex flex-col justify-center items-center text-center px-6 relative">
-        <div class="max-w-4xl z-10">
-            <span class="hero-item text-gold uppercase tracking-[0.6em] text-[10px] mb-6 block opacity-0">El arte de resaltar tu esencia</span>
-            <h1 class="hero-item text-7xl md:text-9xl font-light mb-6 opacity-0">Belleza <span class="italic font-normal">Real.</span></h1>
-            <p class="hero-item text-xl text-gray-300 mb-12 max-w-lg mx-auto font-light leading-relaxed opacity-0">Uñas, manos y pies diseñados para la mujer moderna.</p>
-            <a href="#servicios" class="hero-item magnetic bg-[#d4af37] text-black font-semibold py-5 px-16 rounded-full shadow-2xl hover:scale-105 transition-all inline-block opacity-0">Reservar mi experiencia</a>
-        </div>
+    <header class="hero-bg min-h-[85vh] flex flex-col justify-center items-center text-center px-6">
+        <span class="text-white uppercase tracking-[0.8em] text-[10px] font-bold mb-4 drop-shadow-md italic">Exclusividad en Ciudad Córdoba</span>
+        <h1 class="text-6xl md:text-[7rem] text-white font-light mb-8 leading-none italic drop-shadow-lg">Afro <span class="text-gold not-italic font-normal">Rose.</span></h1>
+        <p class="text-white/90 mb-10 tracking-[0.3em] uppercase text-[10px] font-light">Donde cada hebra y cada detalle cuenta</p>
+        <a href="#galeria" class="bg-gold text-white font-bold py-5 px-10 rounded-full text-[10px] tracking-widest uppercase shadow-xl hover:scale-105 transition-all">Ver Servicios Disponibles</a>
     </header>
 
-    <section class="py-4 overflow-hidden bg-white/5 border-y border-gold/10 relative z-10">
-        <div id="marquee-container" class="flex whitespace-nowrap">
-            <div class="marquee-item flex items-center gap-4">
-                <span class="text-gold text-xl italic">✨</span>
-                <span class="text-[10px] uppercase tracking-widest text-gray-300">Detalle Infinito</span>
+    <section class="py-20 px-6 bg-white">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+            <div class="space-y-4 group">
+                <div class="w-16 h-16 bg-stone-50 border border-gold/20 rounded-full flex items-center justify-center mx-auto text-2xl group-hover:bg-gold group-hover:text-white transition-all">🌿</div>
+                <h3 class="font-serif italic text-2xl">Cuidado Especializado</h3>
+                <p class="text-gray-500 text-[10px] uppercase tracking-widest leading-relaxed">Productos orgánicos sin sulfatos.</p>
             </div>
-            <div class="marquee-item flex items-center gap-4">
-                <span class="text-gold text-xl italic">🌸</span>
-                <span class="text-[10px] uppercase tracking-widest text-gray-300">Ambiente Relajante</span>
+            <div class="space-y-4 group">
+                <div class="w-16 h-16 bg-stone-50 border border-gold/20 rounded-full flex items-center justify-center mx-auto text-2xl group-hover:bg-gold group-hover:text-white transition-all">👑</div>
+                <h3 class="font-serif italic text-2xl">Expertas en Texturas</h3>
+                <p class="text-gray-500 text-[10px] uppercase tracking-widest leading-relaxed">Dominamos todos los patrones de rizo.</p>
             </div>
-            <div class="marquee-item flex items-center gap-4">
-                <span class="text-gold text-xl italic">🕒</span>
-                <span class="text-[10px] uppercase tracking-widest text-gray-300">Tu Tiempo Vale</span>
-            </div>
-            <div class="marquee-item flex items-center gap-4">
-                <span class="text-gold text-xl italic">✨</span>
-                <span class="text-[10px] uppercase tracking-widest text-gray-300">Detalle Infinito</span>
-            </div>
-            <div class="marquee-item flex items-center gap-4">
-                <span class="text-gold text-xl italic">🌸</span>
-                <span class="text-[10px] uppercase tracking-widest text-gray-300">Ambiente Relajante</span>
+            <div class="space-y-4 group">
+                <div class="w-16 h-16 bg-stone-50 border border-gold/20 rounded-full flex items-center justify-center mx-auto text-2xl group-hover:bg-gold group-hover:text-white transition-all">🍷</div>
+                <h3 class="font-serif italic text-2xl">Ambiente VIP</h3>
+                <p class="text-gray-500 text-[10px] uppercase tracking-widest leading-relaxed">Privacidad y confort total para ti.</p>
             </div>
         </div>
     </section>
 
-    <section class="py-24 px-6 relative z-10">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="text-4xl font-serif italic mb-12 text-gold">Catálogo de Estilos</h2>
-            <div class="catalog-container">
-                <div class="style-card group">
-                    <img src="https://images.unsplash.com/photo-1620331311520-246422fd82f9?auto=format&fit=crop&q=80&w=500" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent p-6 flex flex-col justify-end">
-                        <h4 class="text-xl font-serif italic">Soft Layering</h4>
-                        <p class="text-[9px] text-gold uppercase tracking-[0.2em]">Corte Tendencia</p>
+    <section id="galeria" class="py-20 px-4 bg-[#fafafa]">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-4xl font-serif italic mb-2">Tu Próximo Look</h2>
+            <p class="text-gray-400 text-[10px] mb-12 uppercase tracking-[0.3em]">Elige tu ritual favorito</p>
+            
+            <div class="flex flex-wrap justify-center gap-2 mb-12">
+                <button onclick="filterCat('all', this)" class="tab-active border border-gold/20 px-6 py-2 rounded-full text-[10px] uppercase font-bold tracking-widest transition-all">Todos</button>
+                <button onclick="filterCat('afro', this)" class="border border-gold/20 px-6 py-2 rounded-full text-[10px] uppercase font-bold tracking-widest transition-all">Cabello Afro</button>
+                <button onclick="filterCat('uñas', this)" class="border border-gold/20 px-6 py-2 rounded-full text-[10px] uppercase font-bold tracking-widest transition-all">Diseño de Uñas</button>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="gallery-grid">
+                <div class="item-card afro group relative rounded-[2.5rem] overflow-hidden aspect-[3/4] shadow-lg transition-all duration-500">
+                    <img src="https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?q=80&w=600" loading="lazy" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity p-4">
+                        <p class="text-white font-serif italic text-xl mb-4 text-center">Silk Press <br> Sedosidad Total</p>
+                        <button onclick="selectRitual('Silk Press')" class="bg-gold text-white text-[9px] font-bold px-6 py-3 rounded-full uppercase tracking-tighter">Seleccionar</button>
                     </div>
                 </div>
-                <div class="style-card group">
-                    <img src="https://images.unsplash.com/photo-1595476108010-b4d1f8c2b1b1?auto=format&fit=crop&q=80&w=500" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent p-6 flex flex-col justify-end">
-                        <h4 class="text-xl font-serif italic">French Bob</h4>
-                        <p class="text-[9px] text-gold uppercase tracking-[0.2em]">Elegancia</p>
+
+                <div class="item-card afro group relative rounded-[2.5rem] overflow-hidden aspect-[3/4] shadow-lg transition-all duration-500">
+                    <img src="https://images.unsplash.com/photo-1632760127464-556e7282c68e?q=80&w=600" loading="lazy" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity p-4">
+                        <p class="text-white font-serif italic text-xl mb-4 text-center">Trenzas <br> Box Braids</p>
+                        <button onclick="selectRitual('Box Braids')" class="bg-gold text-white text-[9px] font-bold px-6 py-3 rounded-full uppercase tracking-tighter">Seleccionar</button>
                     </div>
                 </div>
-                <div class="style-card group">
-                    <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&q=80&w=500" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent p-6 flex flex-col justify-end">
-                        <h4 class="text-xl font-serif italic">Shaggy Chic</h4>
-                        <p class="text-[9px] text-gold uppercase tracking-[0.2em]">Versátil</p>
+
+                <div class="item-card uñas group relative rounded-[2.5rem] overflow-hidden aspect-[3/4] shadow-lg transition-all duration-500">
+                    <img src="https://images.unsplash.com/photo-1604654894610-df63bc566371?q=80&w=600" loading="lazy" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity p-4">
+                        <p class="text-white font-serif italic text-xl mb-4 text-center">Nail Art <br> Premium</p>
+                        <button onclick="selectRitual('Diseño Uñas')" class="bg-gold text-white text-[9px] font-bold px-6 py-3 rounded-full uppercase tracking-tighter">Seleccionar</button>
                     </div>
                 </div>
-                <div class="style-card group">
-                    <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&q=80&w=500" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent p-6 flex flex-col justify-end">
-                        <h4 class="text-xl font-serif italic">Balayage</h4>
-                        <p class="text-[9px] text-gold uppercase tracking-[0.2em]">Luz Natural</p>
+
+                <div class="item-card uñas group relative rounded-[2.5rem] overflow-hidden aspect-[3/4] shadow-lg transition-all duration-500">
+                    <img src="https://images.unsplash.com/photo-1634712282287-14ed57b9cc89?q=80&w=600" loading="lazy" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity p-4">
+                        <p class="text-white font-serif italic text-xl mb-4 text-center">Esculpidas <br> Luxury Finish</p>
+                        <button onclick="selectRitual('Diseño Uñas')" class="bg-gold text-white text-[9px] font-bold px-6 py-3 rounded-full uppercase tracking-tighter">Seleccionar</button>
                     </div>
                 </div>
             </div>
-            <p class="text-center text-gray-500 text-[9px] mt-6 uppercase tracking-widest md:hidden">← Desliza para ver más →</p>
         </div>
     </section>
 
-    <section id="servicios" class="py-32 px-6 max-w-4xl mx-auto relative z-10">
-        <div class="glass-card-premium p-10 md:p-20 relative overflow-hidden">
-            <h2 class="text-5xl font-serif italic mb-4">Agenda tu Momento</h2>
-            <p class="text-gray-400 mb-12 font-light tracking-wide uppercase text-xs">Sincroniza el turno directamente con tu calendario</p>
+    <section class="py-24 bg-stone-900 text-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-serif italic mb-16 text-center italic">El Efecto Afro Rose</h2>
+            
+            <div class="flex gap-6 overflow-x-auto pb-10 no-scrollbar snap-x snap-mandatory">
+                <div class="snap-center shrink-0 w-[85%] md:w-[350px] bg-white/5 rounded-[2.5rem] overflow-hidden border border-white/10 p-5">
+                    <div class="flex gap-2 mb-6 h-64">
+                        <div class="w-1/2 relative rounded-2xl overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?q=80&w=300" class="w-full h-full object-cover grayscale brightness-50">
+                        </div>
+                        <div class="w-1/2 relative rounded-2xl overflow-hidden border-2 border-gold">
+                            <img src="https://images.unsplash.com/photo-1605497746444-ac961aa01712?q=80&w=300" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <p class="font-serif italic text-xl text-stone-200 mb-4 px-2">"Sentir mi cabello tan hidratado y liso sin químicos me cambió la vida."</p>
+                    <span class="text-[9px] font-bold text-gold uppercase tracking-widest px-2">— Vanessa M., Cali</span>
+                </div>
 
-            <div class="space-y-10">
-                <div class="group relative">
-                    <label class="block mb-4 text-xs font-bold uppercase text-gold tracking-widest">1. ¿Qué servicio buscás?</label>
-                    <select id="main-service" onchange="updateFromSelect()" class="w-full bg-transparent border-b border-white/10 py-4 text-2xl font-serif outline-none focus:border-gold transition-colors appearance-none">
-                        <option value="0" class="bg-black">Seleccionar servicio...</option>
-                        <option value="2500" class="bg-black" data-name="Manicura Diseño">Manicura con Diseño — $2.500</option>
-                        <option value="2200" class="bg-black" data-name="Pedicura Spa">Spa de Pies — $2.200</option>
-                        <option value="1800" class="bg-black" data-name="Esmaltado">Semipermanente Liso — $1.800</option>
+                <div class="snap-center shrink-0 w-[85%] md:w-[350px] bg-white/5 rounded-[2.5rem] overflow-hidden border border-white/10 p-5">
+                    <div class="flex gap-2 mb-6 h-64">
+                        <div class="w-1/2 relative rounded-2xl overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1610992015732-2449b7ec9c9d?q=80&w=300" class="w-full h-full object-cover grayscale brightness-50">
+                        </div>
+                        <div class="w-1/2 relative rounded-2xl overflow-hidden border-2 border-gold">
+                            <img src="https://images.unsplash.com/photo-1604654894610-df63bc566371?q=80&w=300" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <p class="font-serif italic text-xl text-stone-200 mb-4 px-2">"En Ciudad Córdoba no hay nadie que cuide las uñas con este nivel de arte."</p>
+                    <span class="text-[9px] font-bold text-gold uppercase tracking-widest px-2">— Camila R., Cali</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reserva" class="py-20 px-6 max-w-4xl mx-auto">
+        <div class="glass-card p-8 md:p-14 rounded-[3rem] shadow-2xl border border-gold/10">
+            <h2 class="text-3xl font-serif italic mb-10 text-center">Reserva tu Experiencia</h2>
+
+            <div id="service-preview-container" class="w-full">
+                <div class="relative h-44 rounded-3xl overflow-hidden shadow-xl border-4 border-white">
+                    <img id="preview-img" src="" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+                        <span id="preview-name" class="text-white font-serif italic text-2xl"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-gold tracking-widest mb-3">1. Ritual Seleccionado</label>
+                    <select id="main-select" onchange="updateUI()" class="w-full bg-transparent border-b border-stone-200 py-3 text-lg outline-none focus:border-gold transition-colors">
+                        <option value="0" data-name="null">Escoger ritual...</option>
+                        <optgroup label="👑 CORONA AFRO">
+                            <option value="45000" data-name="Silk Press" data-img="https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?q=80&w=600">Silk Press — $45.000</option>
+                            <option value="85000" data-name="Box Braids" data-img="https://images.unsplash.com/photo-1632760127464-556e7282c68e?q=80&w=600">Box Braids — $85.000</option>
+                        </optgroup>
+                        <optgroup label="💅 ARTE EN UÑAS">
+                            <option value="35000" data-name="Diseño Uñas" data-img="https://images.unsplash.com/photo-1604654894610-df63bc566371?q=80&w=600">Manicura Premium — $35.000</option>
+                        </optgroup>
                     </select>
                 </div>
 
-                <div class="group relative">
-                    <label class="block mb-4 text-xs font-bold uppercase text-gold tracking-widest">2. Seleccioná Día y Hora</label>
-                    <input type="text" id="date-picker" placeholder="Toca para elegir fecha..." class="w-full bg-transparent border-b border-white/10 py-4 text-xl outline-none focus:border-gold transition-colors">
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-gold tracking-widest mb-3">2. Cantidad Personas</label>
+                        <input type="number" id="qty" value="1" min="1" onchange="updateUI()" class="w-full bg-stone-50 p-4 rounded-2xl outline-none focus:ring-1 focus:ring-gold">
+                    </div>
+                    <div class="text-right flex flex-col justify-end">
+                        <span class="text-[10px] font-bold uppercase text-gray-400">Total a Pagar</span>
+                        <div class="text-3xl text-gold font-light">$<span id="total">0</span></div>
+                    </div>
                 </div>
 
-                <div class="flex items-center justify-between py-8 border-y border-white/5">
-                    <span class="text-gray-400 text-sm italic">Precio Final</span>
-                    <div class="text-5xl font-light text-gold">$<span id="total-display">0</span></div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-gold tracking-widest mb-3">3. Agenda de Disponibilidad</label>
+                    <div class="w-full h-56 rounded-2xl overflow-hidden border border-stone-100 shadow-inner mb-4">
+                        <iframe src="https://calendar.google.com/calendar/embed?mode=AGENDA&hl=es_CO" style="border:0" width="100%" height="100%"></iframe>
+                    </div>
+                    <input type="text" id="agenda-date" placeholder="Fecha y Hora (Ej: Sábado 4pm)" class="w-full bg-stone-50 p-5 rounded-2xl outline-none focus:ring-1 focus:ring-gold">
                 </div>
 
-                <div class="pt-8">
-                    <input type="text" id="client-name" placeholder="Tu Nombre Completo" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl mb-4 outline-none focus:border-gold transition-all text-lg">
-                    <input type="email" id="client-email" placeholder="Tu Email" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl mb-8 outline-none focus:border-gold transition-all text-lg">
-                    
-                    <button onclick="confirmarYAgendar()" class="magnetic w-full bg-gold text-black font-bold py-6 rounded-2xl text-xl hover:scale-[1.01] transition-all">
-                        Confirmar y Agendar Turno
-                    </button>
+                <div class="pt-6">
+                    <input type="text" id="client-name" placeholder="Tu Nombre" class="w-full bg-stone-100/50 p-5 rounded-2xl outline-none mb-4 focus:bg-white focus:ring-1 focus:ring-gold transition-all">
+                    <button onclick="confirmarWhatsApp()" class="w-full bg-gold text-white font-bold py-6 rounded-2xl text-[11px] uppercase tracking-[0.3em] shadow-xl hover:brightness-105 active:scale-[0.98] transition-all">Agendar Cita en Cali</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-20 text-center opacity-30 text-xs tracking-widest uppercase">
-        &copy; 2026 Beauty Studio Profesional | Villa Carlos Paz
+    <footer class="bg-luxury-dark text-white pt-20 pb-10 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
+            <div>
+                <h3 class="font-serif text-5xl italic text-gold mb-4">Afro Rose.</h3>
+                <p class="text-gray-400 text-xs tracking-widest uppercase italic">Ciudad Córdoba, Cali, Colombia</p>
+            </div>
+            <div class="flex gap-8 text-[10px] uppercase tracking-[0.2em] font-bold">
+                <a href="#" class="hover:text-gold transition-colors">Instagram</a>
+                <a href="#" class="hover:text-gold transition-colors">TikTok</a>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/5 text-[8px] text-gray-600 tracking-[0.4em] uppercase text-center">
+            <p>© 2026 AFRO ROSE STUDIO • PROYECTO DE PRESENTACIÓN</p>
+        </div>
     </footer>
 
     <script>
@@ -212,54 +235,65 @@
         function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Animaciones Marquee
-        gsap.to(".marquee-item", { xPercent: -100, repeat: -1, duration: 15, ease: "none" });
-
-        // Animación Cursor e Items Hero
-        const cursor = document.getElementById('custom-cursor');
-        const follower = document.getElementById('cursor-follower');
-        document.addEventListener('mousemove', (e) => {
-            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0 });
-            gsap.to(follower, { x: e.clientX - 13, y: e.clientY - 13, duration: 0.2 });
-        });
-        gsap.to(".hero-item", { opacity: 1, y: -20, stagger: 0.2, duration: 1.5, ease: "expo.out", delay: 0.5 });
-
-        // LÓGICA DE CITAS (TU CÓDIGO)
-        flatpickr("#date-picker", {
-            enableTime: true,
-            dateFormat: "d/m/Y - H:i",
-            minDate: "today",
-            locale: "es",
-            minTime: "09:00",
-            maxTime: "20:00"
-        });
-
-        let currentPrice = 0, currentName = "";
-        function updateFromSelect() {
-            const select = document.getElementById('main-service');
-            currentPrice = parseInt(select.value);
-            currentName = select.options[select.selectedIndex].getAttribute('data-name');
-            document.getElementById('total-display').innerText = currentPrice.toLocaleString();
+        function selectRitual(name) {
+            const select = document.getElementById('main-select');
+            for(let i=0; i<select.options.length; i++) {
+                if(select.options[i].getAttribute('data-name') === name) {
+                    select.selectedIndex = i;
+                    break;
+                }
+            }
+            updateUI();
+            lenis.scrollTo('#reserva', { offset: -50 });
         }
 
-        function confirmarYAgendar() {
-            const name = document.getElementById('client-name').value;
-            const date = document.getElementById('date-picker').value;
-            if(!name || !date || currentPrice === 0) return alert("Completa los datos.");
-            const msg = `¡Hola! Soy ${name}. Agendé un turno para *${currentName}* el día ${date}. Total: $${currentPrice}.`;
-            window.open(`https://wa.me/XXXXXXXXXXX?text=${encodeURIComponent(msg)}`, '_blank');
-        }
-
-        // Efecto Magnético
-        document.querySelectorAll('.magnetic').forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                gsap.to(btn, { x: (e.clientX - rect.left - rect.width/2) * 0.2, y: (e.clientY - rect.top - rect.height/2) * 0.2, duration: 0.4 });
+        function filterCat(cat, btn) {
+            document.querySelectorAll('#galeria button').forEach(b => b.classList.remove('tab-active'));
+            btn.classList.add('tab-active');
+            document.querySelectorAll('.item-card').forEach(item => {
+                if(cat === 'all' || item.classList.contains(cat)) {
+                    item.style.display = 'block';
+                    gsap.fromTo(item, {opacity: 0, scale: 0.9}, {opacity: 1, scale: 1, duration: 0.5});
+                } else {
+                    item.style.display = 'none';
+                }
             });
-            btn.addEventListener('mouseleave', () => gsap.to(btn, { x: 0, y: 0, duration: 0.4 }));
-        });
+        }
+
+        function updateUI() {
+            const select = document.getElementById('main-select');
+            const opt = select.options[select.selectedIndex];
+            const qty = document.getElementById('qty').value || 1;
+            const price = parseInt(opt.value) || 0;
+            
+            document.getElementById('total').innerText = (price * qty).toLocaleString('es-CO');
+
+            const container = document.getElementById('service-preview-container');
+            if(price > 0 && opt.getAttribute('data-img')) {
+                document.getElementById('preview-img').src = opt.getAttribute('data-img');
+                document.getElementById('preview-name').innerText = opt.getAttribute('data-name');
+                container.classList.add('active');
+            } else {
+                container.classList.remove('active');
+            }
+        }
+
+        function confirmarWhatsApp() {
+            const name = document.getElementById('client-name').value;
+            const date = document.getElementById('agenda-date').value;
+            const select = document.getElementById('main-select');
+            const qty = document.getElementById('qty').value;
+            const opt = select.options[select.selectedIndex];
+
+            if(select.value === "0" || !name || !date) {
+                alert("Por favor completa los datos.");
+                return;
+            }
+
+            const total = parseInt(select.value) * qty;
+            const msg = `✨ *Presentación Afro Rose* ✨\n\n📍 *Ubicación:* Ciudad Córdoba\n👤 *Cliente:* ${name}\n💆 *Servicio:* ${opt.getAttribute('data-name')}\n🔢 *Cantidad:* ${qty}\n📅 *Fecha:* ${date}\n💰 *Total:* $${total.toLocaleString('es-CO')}`;
+            window.open(`https://wa.me/57XXXXXXXXXXX?text=${encodeURIComponent(msg)}`, '_blank');
+        }
     </script>
 </body>
 </html>
