@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es-CO" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afro Rose | Luxury Studio</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 
+                        'rose-gold': '#c5a059', 
+                        'rose-dark': '#121212', 
+                        'rose-cream': '#faf9f6' 
+                    },
+                    animation: {
+                        'ken-burns': 'kenburns 20s ease infinite alternate',
+                        'scroll-x': 'scrollX 30s linear infinite',
+                    },
+                    keyframes: {
+                        kenburns: {
+                            '0%': { transform: 'scale(1)' },
+                            '100%': { transform: 'scale(1.15) translate(-1%, -1%)' }
+                        },
+                        scrollX: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-50%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Outfit:wght@100;300;400;600&display=swap');
+        body { font-family: 'Outfit', sans-serif; background: #fff; color: #121212; overflow-x: hidden; }
+        h1, h2, h3, .font-serif { font-family: 'Cormorant Garamond', serif; }
+        
+        .hero-viewport { position: relative; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)); }
+        .glass-luxury { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(197, 160, 89, 0.2); }
+    </style>
+</head>
+<body>
+
+    <header class="hero-viewport">
+        <div class="absolute inset-0 z-[-1]">
+            <img src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?q=80&w=1800" 
+                 class="w-full h-full object-cover animate-ken-burns" alt="Afro Luxury">
+            <div class="hero-overlay"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-6">
+            <span class="text-white uppercase tracking-[0.8em] text-[10px] font-bold mb-4 block italic">Cali · Ciudad Córdoba</span>
+            <h1 class="text-7xl md:text-[9rem] text-white font-light mb-4 leading-none italic">
+                Afro <span class="text-rose-gold not-italic">Rose.</span>
+            </h1>
+            <p class="text-white/80 mb-10 tracking-[0.4em] uppercase text-[9px]">Donde cada hebra y cada detalle cuenta</p>
+            <a href="#catalogo" class="inline-block border border-rose-gold text-rose-gold hover:bg-rose-gold hover:text-white font-bold py-5 px-14 rounded-full text-[10px] tracking-[0.3em] uppercase transition-all duration-700">Explorar Rituales</a>
+        </div>
+    </header>
+
+    <div class="bg-rose-dark py-6 overflow-hidden border-y border-rose-gold/20">
+        <div class="flex whitespace-nowrap animate-scroll-x">
+            <div class="flex items-center gap-12 px-12">
+                <span class="text-rose-gold text-xl">🌿</span>
+                <span class="text-white uppercase tracking-widest text-[11px] font-light">Cuidado Especializado: Productos orgánicos sin sulfatos</span>
+                <span class="text-rose-gold text-xl">👑</span>
+                <span class="text-white uppercase tracking-widest text-[11px] font-light">Expertas en Texturas: Maestras en patrones de rizo</span>
+                <span class="text-rose-gold text-xl">🍷</span>
+                <span class="text-white uppercase tracking-widest text-[11px] font-light">Ambiente VIP: Privacidad y confort total</span>
+            </div>
+            <div class="flex items-center gap-12 px-12">
+                <span class="text-rose-gold text-xl">🌿</span>
+                <span class="text-white uppercase tracking-widest text-[11px] font-light">Cuidado Especializado: Productos orgánicos sin sulfatos</span>
+                <span class="text-rose-gold text-xl">👑</span>
+                <span class="text-white uppercase tracking-widest text-[11px] font-light">Expertas en Texturas: Maestras en patrones de rizo</span>
+                <span class="text-rose-gold text-xl">🍷</span>
+                <span class="text-white uppercase tracking-widest text-[11px] font-light">Ambiente VIP: Privacidad y confort total</span>
+            </div>
+        </div>
+    </div>
+
+    <section id="catalogo" class="py-24 bg-rose-cream px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-serif italic mb-2 text-rose-dark">Nuestro Catálogo</h2>
+                <p class="text-rose-gold text-[10px] uppercase tracking-[0.4em]">Toca un ritual para seleccionarlo</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div onclick="seleccionarRitual('Silk Press Luxury', 45000)" class="group cursor-pointer bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500">
+                    <div class="h-80 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1605497746444-ac961aa01712?q=80&w=600" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute bottom-4 right-4 bg-rose-gold text-white px-4 py-1 rounded-full text-xs font-bold">$45.000</div>
+                    </div>
+                    <div class="p-8 text-center">
+                        <h3 class="font-serif text-2xl italic mb-2">Silk Press Luxury</h3>
+                        <p class="text-[10px] text-gray-400 uppercase tracking-widest">Brillo y sedosidad extrema</p>
+                    </div>
+                </div>
+
+                <div onclick="seleccionarRitual('Trenzas Box Braids', 85000)" class="group cursor-pointer bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500">
+                    <div class="h-80 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1632760127464-556e7282c68e?q=80&w=600" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute bottom-4 right-4 bg-rose-gold text-white px-4 py-1 rounded-full text-xs font-bold">$85.000</div>
+                    </div>
+                    <div class="p-8 text-center">
+                        <h3 class="font-serif text-2xl italic mb-2">Trenzas Box Braids</h3>
+                        <p class="text-[10px] text-gray-400 uppercase tracking-widest">Estilo protector premium</p>
+                    </div>
+                </div>
+
+                <div onclick="seleccionarRitual('Corte & Definición', 55000)" class="group cursor-pointer bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500">
+                    <div class="h-80 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1620331311520-246422ff82f9?q=80&w=600" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute bottom-4 right-4 bg-rose-gold text-white px-4 py-1 rounded-full text-xs font-bold">$55.000</div>
+                    </div>
+                    <div class="p-8 text-center">
+                        <h3 class="font-serif text-2xl italic mb-2">Corte & Definición</h3>
+                        <p class="text-[10px] text-gray-400 uppercase tracking-widest">Poder para tus rizos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reserva" class="py-24 px-6 bg-rose-dark relative">
+        <div class="max-w-3xl mx-auto relative z-10">
+            <div class="glass-luxury p-10 md:p-16 rounded-[3rem] shadow-2xl">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-serif italic mb-2">Finaliza tu Reserva</h2>
+                    <p class="text-rose-gold text-[10px] uppercase tracking-[0.4em]">Atención en Ciudad Córdoba</p>
+                </div>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-rose-gold block mb-2">Ritual Elegido</label>
+                        <input type="text" id="prod-name" readonly class="w-full bg-rose-cream/50 p-5 rounded-2xl outline-none border border-rose-gold/10 font-bold" placeholder="Selecciona arriba en el catálogo">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-rose-gold block mb-2">Cantidad</label>
+                            <input type="number" id="prod-qty" value="1" min="1" class="w-full bg-white p-5 rounded-2xl outline-none focus:ring-1 focus:ring-rose-gold">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-gray-400 block mb-2">Ver Agenda</label>
+                            <div class="h-14 overflow-hidden rounded-2xl border border-rose-gold/20">
+                                <iframe src="https://calendar.google.com/calendar/embed?mode=AGENDA&hl=es_CO" style="border:0" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <input type="text" id="client-name" placeholder="Tu Nombre Completo" class="w-full bg-white p-5 rounded-2xl outline-none focus:ring-1 focus:ring-rose-gold mb-4">
+                        <input type="text" id="agenda-time" placeholder="Fecha y Hora (Ej: Viernes 2:00 PM)" class="w-full bg-white p-5 rounded-2xl outline-none focus:ring-1 focus:ring-rose-gold">
+                    </div>
+
+                    <button onclick="enviarPedido()" class="w-full bg-rose-gold text-white font-bold py-6 rounded-2xl text-[11px] uppercase tracking-[0.4em] shadow-xl hover:brightness-110 active:scale-95 transition-all">Agendar vía WhatsApp</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black text-white py-16 text-center">
+        <h3 class="font-serif text-4xl italic text-rose-gold mb-4">Afro Rose.</h3>
+        <p class="text-gray-600 text-[8px] uppercase tracking-[0.5em]">Cali, Colombia · 2026</p>
+    </footer>
+
+    <script>
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        function seleccionarRitual(nombre, precio) {
+            document.getElementById('prod-name').value = nombre;
+            // Scroll suave hacia el formulario
+            lenis.scrollTo('#reserva', { offset: -50 });
+            // Pequeño efecto visual en el input
+            gsap.fromTo("#prod-name", {backgroundColor: "#c5a059"}, {backgroundColor: "#faf9f6", duration: 1});
+        }
+
+        function enviarPedido() {
+            const product = document.getElementById('prod-name').value;
+            const quantity = document.getElementById('prod-qty').value;
+            const name = document.getElementById('client-name').value;
+            const time = document.getElementById('agenda-time').value;
+
+            if(!product || !name || !time) {
+                alert("Por favor selecciona un ritual y completa tus datos.");
+                return;
+            }
+
+            const mensaje = `✨ *Reserva Afro Rose* ✨\n\n` +
+                            `👤 *Cliente:* ${name}\n` +
+                            `💆 *Ritual:* ${product}\n` +
+                            `🔢 *Cantidad:* ${quantity}\n` +
+                            `📅 *Horario:* ${time}\n\n` +
+                            `Confirmar disponibilidad por favor.`;
+
+            window.open(`https://wa.me/573000000000?text=${encodeURIComponent(mensaje)}`, '_blank');
+        }
+    </script>
+</body>
+</html>
